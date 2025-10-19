@@ -1,23 +1,13 @@
 {
-  "name": "mediq-ai-hybrid",
+  "name": "mediq-ai",
   "version": "1.0.0",
-  "description": "MediQ.AI - Versão Híbrida com Node.js + Supabase",
-  "main": "server-hybrid.js",
+  "description": "MediQ.AI - SaaS de IA para Saúde",
+  "main": "index.html",
   "scripts": {
-    "start": "node server-hybrid.js",
-    "dev": "nodemon server-hybrid.js",
-    "build": "echo 'Build completed'",
-    "static": "http-server public -p 3000"
+    "build": "echo 'Static build completed'",
+    "start": "echo 'Static site ready'"
   },
-  "dependencies": {
-    "express": "^4.18.2",
-    "@supabase/supabase-js": "^2.38.0",
-    "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
-    "helmet": "^7.1.0"
-  },
-  "devDependencies": {
-    "nodemon": "^3.0.1",
-    "http-server": "^14.1.1"
-  }
+  "keywords": ["healthcare", "ai", "saas", "medical"],
+  "author": "Luciano Paulino",
+  "license": "MIT"
 }
