@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnalisAI - Plataforma de IA para Saúde</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+    <div id="app">
+        <!-- Tela de Login -->
+        <div id="login-screen" class="screen active">
+            <div class="login-container">
+                <div class="login-card">
+                    <div class="logo">
+                        <i class="fas fa-brain"></i>
+                        <h1>AnalisAI</h1>
+                        <p>Inteligência Artificial para Saúde</p>
+                    </div>
+
+                    <form id="login-form">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Senha</label>
+                            <input type="password" id="password" required>
+                        </div>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Entrar
+                        </button>
+                    </form>
+
+                    <div class="register-link">
+                        <p>Não tem uma conta? <a href="#" id="show-register">Cadastre sua clínica</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tela de Registro -->
+        <div id="register-screen" class="screen">
+            <div class="login-container">
+                <div class="login-card">
+                    <div class="logo">
+                        <i class="fas fa-hospital"></i>
+                        <h1>Cadastrar Clínica</h1>
+                        <p>Registre sua clínica no AnalisAI</p>
+                    </div>
+
+                    <form id="register-form">
+                        <div class="form-group">
+                            <label for="clinic-name">Nome da Clínica</label>
+                            <input type="text" id="clinic-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-name">Nome do Administrador</label>
+                            <input type="text" id="admin-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-email">Email do Administrador</label>
+                            <input type="email" id="admin-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-password">Senha</label>
+                            <input type="password" id="admin-password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Telefone</label>
+                            <input type="tel" id="phone">
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Endereço</label>
+                            <textarea id="address" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-plus"></i>
+                            Cadastrar Clínica
+                        </button>
+                    </form>
+
+                    <div class="register-link">
+                        <p>Já tem uma conta? <a href="#" id="show-login">Fazer login</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard-screen" class="screen">
+            <nav class="navbar">
+                <div class="nav-brand">
+                    <i class="fas fa-brain"></i>
+                    <span>AnalisAI</span>
+                </div>
+                <div class="nav-user">
+                    <span id="user-name"></span>
+                    <button id="logout-btn" class="btn-secondary">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Sair
+                    </button>
+                </div>
+            </nav>
+
+            <div class="dashboard-container">
+                <aside class="sidebar">
+                    <div class="sidebar-menu">
+                        <a href="#" class="menu-item active" data-section="overview">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Visão Geral</span>
+                        </a>
+                        <a href="#" class="menu-item" data-section="users">
+                            <i class="fas fa-users"></i>
+                            <span>Usuários</span>
+                        </a>
+                        <a href="#" class="menu-item" data-section="modules">
+                            <i class="fas fa-puzzle-piece"></i>
+                            <span>Módulos</span>
+                        </a>
+                    </div>
+                </aside>
+
+                <main class="main-content">
+                    <!-- Visão Geral -->
+                    <div id="overview-section" class="content-section active">
+                        <h2>Visão Geral</h2>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <i class="fas fa-users"></i>
+                                <div class="stat-info">
+                                    <h3 id="total-users">0</h3>
+                                    <p>Usuários Ativos</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <i class="fas fa-puzzle-piece"></i>
+                                <div class="stat-info">
+                                    <h3 id="active-modules">0</h3>
+                                    <p>Módulos Ativos</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <i class="fas fa-brain"></i>
+                                <div class="stat-info">
+                                    <h3>Premium</h3>
+                                    <p>Plano Atual</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Usuários -->
+                    <div id="users-section" class="content-section">
+                        <div class="section-header">
+                            <h2>Gerenciar Usuários</h2>
+                            <div style="display: flex; gap: 10px;">
+                                <button id="refresh-users-btn" class="btn-secondary">
+                                    <i class="fas fa-sync-alt"></i>
+                                    Atualizar
+                                </button>
+                                <button id="add-user-btn" class="btn-primary">
+                                    <i class="fas fa-plus"></i>
+                                    Adicionar Usuário
+                                </button>
+                            </div>
+                        </div>
+                        <div class="users-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>Email</th>
+                                        <th>Permissões</th>
+                                        <th>Status</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="users-tbody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Módulos -->
+                    <div id="modules-section" class="content-section">
+                        <h2>Módulos do Sistema</h2>
+                        <div class="modules-grid" id="modules-grid">
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para adicionar usuário -->
+    <div id="user-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Adicionar Usuário</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="user-form">
+                <div class="form-group">
+                    <label for="user-name">Nome</label>
+                    <input type="text" id="user-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="user-email">Email</label>
+                    <input type="email" id="user-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="user-password">Senha</label>
+                    <input type="password" id="user-password" required>
+                </div>
+                <div class="form-group">
+                    <label>Permissões</label>
+                    <div class="permissions-grid">
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="medico">
+                            <span>Médico</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="secretaria">
+                            <span>Secretária</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="faturamento">
+                            <span>Faturamento</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="clinica_admin">
+                            <span>Admin da Clínica</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary close-modal">Cancelar</button>
+                    <button type="submit" class="btn-primary">Adicionar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="config-simple.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

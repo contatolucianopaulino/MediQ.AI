@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Usuários de Teste - MediQ.AI</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2E8B57;
+            text-align: center;
+        }
+        .user-card {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+        .user-info {
+            margin-bottom: 10px;
+        }
+        .user-info strong {
+            color: #2E8B57;
+        }
+        button {
+            background: #2E8B57;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #1F5F3F;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .credentials {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Criar Usuários de Teste - MediQ.AI</h1>
+        
+        <div class="credentials">
+            <h3>📋 Credenciais Padrão para Teste</h3>
+            <p><strong>Clínica:</strong> Clínica MediQ Teste</p>
+            <p><strong>Senha padrão:</strong> MediQ2024!</p>
+        </div>
+
+        <div id="status"></div>
+
+        <div class="user-card">
+            <h3>🏥 Administrador da Clínica</h3>
+            <div class="user-info"><strong>Email:</strong> admin@mediqteste.com</div>
+            <div class="user-info"><strong>Nome:</strong> Dr. João Silva</div>
+            <div class="user-info"><strong>Permissões:</strong> Clínica Admin</div>
+            <button onclick="createUser('admin@mediqteste.com', 'Dr. João Silva', ['clinica_admin'])">
+                Criar Administrador
+            </button>
+        </div>
+
+        <div class="user-card">
+            <h3>👨‍⚕️ Médico</h3>
+            <div class="user-info"><strong>Email:</strong> medico@mediqteste.com</div>
+            <div class="user-info"><strong>Nome:</strong> Dra. Maria Santos</div>
+            <div class="user-info"><strong>Permissões:</strong> Médico</div>
+            <button onclick="createUser('medico@mediqteste.com', 'Dra. Maria Santos', ['medico'])">
+                Criar Médico
+            </button>
+        </div>
+
+        <div class="user-card">
+            <h3>👩‍💼 Secretária</h3>
+            <div class="user-info"><strong>Email:</strong> secretaria@mediqteste.com</div>
+            <div class="user-info"><strong>Nome:</strong> Ana Costa</div>
+            <div class="user-info"><strong>Permissões:</strong> Secretária</div>
+            <button onclick="createUser('secretaria@mediqteste.com', 'Ana Costa', ['secretaria'])">
+                Criar Secretária
+            </button>
+        </div>
+
+        <div class="user-card">
+            <h3>💰 Faturamento</h3>
+            <div class="user-info"><strong>Email:</strong> faturamento@mediqteste.com</div>
+            <div class="user-info"><strong>Nome:</strong> Carlos Oliveira</div>
+            <div class="user-info"><strong>Permissões:</strong> Faturamento</div>
+            <button onclick="createUser('faturamento@mediqteste.com', 'Carlos Oliveira', ['faturamento'])">
+                Criar Faturamento
+            </button>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <button onclick="createAllUsers()" style="background: #4A90E2; font-size: 16px; padding: 15px 30px;">
+                🚀 Criar Todos os Usuários
+            </button>
+        </div>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <button onclick="window.location.href='public/index.html'" style="background: #28A745;">
+                🏠 Ir para o Sistema
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Configuração do Supabase
+        const supabase = window.supabase.createClient(
+            'https://uifmnunesfevybpahahx.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVpZm1udW5lc2ZldnlicGFoYWh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA4MTc1ODgsImV4cCI6MjA3NjM5MzU4OH0.J0eaMX0JEVch8gXDlZEVAhRddZd6-8wtZD5w4z4N20g'
+        );
+
+        const CLINIC_ID = '550e8400-e29b-41d4-a716-446655440000';
+        const DEFAULT_PASSWORD = 'MediQ2024!';
+
+        function showStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = `<div class="${type}">${message}</div>`;
+            setTimeout(() => {
+                statusDiv.innerHTML = '';
+            }, 5000);
+        }
+
+        async function createClinic() {
+            // Não criar clínica via JavaScript por enquanto
+            // Será criada via SQL ou interface
+            return true;
+        }
+
+        async function createUser(email, name, permissions) {
+            try {
+                showStatus(`Criando usuário ${name}...`, 'info');
+
+                // Validar email
+                if (!email || !email.includes('@') || !email.includes('.')) {
+                    throw new Error('Email inválido');
+                }
+
+                // Criar usuário no Supabase Auth com configurações específicas
+                const { data: authData, error: authError } = await supabase.auth.signUp({
+                    email: email,
+                    password: DEFAULT_PASSWORD,
+                    options: {
+                        emailRedirectTo: window.location.origin + '/public/index.html'
+                    }
+                });
+
+                if (authError) {
+                    if (authError.message.includes('already registered') || authError.message.includes('User already registered')) {
+                        showStatus(`✅ Usuário ${email} já existe no sistema!`, 'success');
+                        return true;
+                    }
+                    throw authError;
+                }
+
+                showStatus(`✅ Usuário ${name} criado! Verifique o email para confirmar a conta.`, 'success');
+                return true;
+
+            } catch (error) {
+                console.error('Erro ao criar usuário:', error);
+                showStatus(`❌ Erro ao criar ${name}: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        async function updateUserProfile(email, name, permissions) {
+            try {
+                // Buscar usuário existente
+                const { data: users, error: searchError } = await supabase
+                    .from('profiles')
+                    .select('id')
+                    .eq('email', email);
+
+                if (searchError) throw searchError;
+
+                if (users && users.length > 0) {
+                    // Atualizar perfil existente
+                    const { error: updateError } = await supabase
+                        .from('profiles')
+                        .update({
+                            name: name,
+                            clinic_id: CLINIC_ID,
+                            permissions: permissions
+                        })
+                        .eq('id', users[0].id);
+
+                    if (updateError) throw updateError;
+                    showStatus(`✅ Perfil de ${name} atualizado com sucesso!`, 'success');
+                    return true;
+                }
+
+                showStatus(`⚠️ Usuário ${email} não encontrado para atualização`, 'error');
+                return false;
+
+            } catch (error) {
+                console.error('Erro ao atualizar perfil:', error);
+                showStatus(`❌ Erro ao atualizar ${name}: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        async function createAllUsers() {
+            showStatus('🚀 Criando todos os usuários de teste...', 'info');
+            
+            const users = [
+                ['admin@mediqteste.com', 'Dr. João Silva', ['clinica_admin']],
+                ['medico@mediqteste.com', 'Dra. Maria Santos', ['medico']],
+                ['secretaria@mediqteste.com', 'Ana Costa', ['secretaria']],
+                ['faturamento@mediqteste.com', 'Carlos Oliveira', ['faturamento']]
+            ];
+
+            let success = 0;
+            for (const [email, name, permissions] of users) {
+                const result = await createUser(email, name, permissions);
+                if (result) success++;
+                await new Promise(resolve => setTimeout(resolve, 1000)); // Aguardar 1s entre criações
+            }
+
+            showStatus(`🎉 Processo concluído! ${success}/${users.length} usuários criados/atualizados.`, 'success');
+        }
+
+        // Verificar conexão com Supabase ao carregar
+        window.onload = async () => {
+            try {
+                // Testar conexão simples
+                const { data, error } = await supabase.auth.getSession();
+                showStatus('✅ Conectado ao Supabase com sucesso!', 'success');
+            } catch (error) {
+                showStatus('❌ Erro de conexão com Supabase: ' + error.message, 'error');
+            }
+        };
+    </script>
+</body>
+</html>
