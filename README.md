@@ -1,7 +1,7 @@
 # 🧠 MediQ.AI - SaaS de IA para Saúde
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/seu-usuario/mediq-ai)
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/seu-usuario/mediq-ai)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/contatolucianopaulino/MediQ.AI)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/contatolucianopaulino/MediQ.AI)
 
 Plataforma SaaS modular de Inteligência Artificial voltada para médicos e clínicas, com foco em auxiliar durante o atendimento clínico.
 
