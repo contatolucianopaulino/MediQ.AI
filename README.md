@@ -230,6 +230,7 @@ MediQ.AI/
 - 🔄 Módulo de prescrição inteligente
 - 🔄 Transcrição de áudio básica
 - 🔄 Validação de interações medicamentosas
+- 🔄 Módulo Cardiologia Assistida (triagem, monitoramento e insights)
 
 ### **🏗️ Fase 3: IA Avançada (Planejado)**
 - 📋 Análise de histórico clínico

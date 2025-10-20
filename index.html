@@ -19,6 +19,12 @@
             window.SUPABASE_CONFIG.url,
             window.SUPABASE_CONFIG.key
         );
+
+        // Configuração temporária da API Gemini (apenas para demonstrações)
+        window.GEMINI_CONFIG = {
+            apiKey: 'AIzaSyALkAjqISdoUH2nf7duyytmAwb9BUkGQnY',
+            model: 'gemini-2.5-flash'
+        };
     </script>
 </head>
 <body>
@@ -85,6 +91,10 @@
                         <a href="#" class="menu-item" data-section="modules">
                             <i class="fas fa-puzzle-piece"></i>
                             <span>Módulos</span>
+                        </a>
+                        <a href="#" class="menu-item" data-section="cardio">
+                            <i class="fas fa-heartbeat"></i>
+                            <span>Cardiologia Assistida</span>
                         </a>
                     </div>
                 </aside>
@@ -153,6 +163,118 @@
                     <div id="modules-section" class="content-section">
                         <h2>Módulos do Sistema</h2>
                         <div class="modules-grid" id="modules-grid">
+                        </div>
+                    </div>
+
+                    <!-- Cardiologia -->
+                    <div id="cardio-section" class="content-section">
+                        <div class="cardio-header">
+                            <div>
+                                <h2>Cardiologia Assistida</h2>
+                                <p class="cardio-subtitle">Estruture triagens, monitore sinais vitais e gere recomendações assistidas por IA para cenários cardiológicos.</p>
+                            </div>
+                            <div class="cardio-toolbar">
+                                <label for="cardio-case-select" class="cardio-label">Casos de demonstração</label>
+                                <select id="cardio-case-select">
+                                    <option value="">Selecione um caso</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="cardio-disclaimer">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Recomendações geradas para fins de demonstração. Não utilize como orientação clínica sem avaliação médica especializada.</span>
+                        </div>
+                        <div class="cardio-grid">
+                            <section class="cardio-card cardio-summary-card">
+                                <header>
+                                    <h3><i class="fas fa-user-md"></i> Resumo do Paciente</h3>
+                                </header>
+                                <div class="cardio-summary" id="cardio-patient-summary">
+                                    <p class="cardio-placeholder">Selecione um caso ou preencha a triagem para visualizar o resumo.</p>
+                                </div>
+                                <div class="cardio-background" id="cardio-patient-background"></div>
+                                <div class="cardio-guideline" id="cardio-guideline-note"></div>
+                            </section>
+                            <section class="cardio-card">
+                                <header>
+                                    <h3><i class="fas fa-stethoscope"></i> Triagem Cardiovascular</h3>
+                                </header>
+                                <form id="cardio-triage-form" class="cardio-form">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="cardio-age">Idade</label>
+                                            <input type="number" id="cardio-age" min="18" max="120" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="cardio-gender">Sexo</label>
+                                            <select id="cardio-gender" required>
+                                                <option value="">Selecione</option>
+                                                <option value="male">Masculino</option>
+                                                <option value="female">Feminino</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="cardio-systolic">Pressão Sistólica (mmHg)</label>
+                                            <input type="number" id="cardio-systolic" min="80" max="250" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="cardio-cholesterol">LDL (mg/dL)</label>
+                                            <input type="number" id="cardio-cholesterol" min="50" max="400" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="cardio-diabetes">Diabetes</label>
+                                            <select id="cardio-diabetes" required>
+                                                <option value="">Selecione</option>
+                                                <option value="yes">Sim</option>
+                                                <option value="no">Não</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="cardio-smoker">Tabagismo</label>
+                                            <select id="cardio-smoker" required>
+                                                <option value="">Selecione</option>
+                                                <option value="yes">Sim</option>
+                                                <option value="no">Não</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cardio-symptoms">Sintomas Principais</label>
+                                        <textarea id="cardio-symptoms" rows="2" placeholder="Descreva sintomas relatados"></textarea>
+                                    </div>
+                                    <button type="submit" class="btn-primary cardio-submit">
+                                        <i class="fas fa-heart"></i>
+                                        Calcular Risco
+                                    </button>
+                                </form>
+                                <div id="cardio-triage-result" class="cardio-result"></div>
+                            </section>
+                            <section class="cardio-card">
+                                <header>
+                                    <h3><i class="fas fa-chart-line"></i> Monitoramento Hemodinâmico</h3>
+                                    <button id="cardio-monitor-refresh" class="btn-secondary cardio-refresh">
+                                        <i class="fas fa-sync-alt"></i>
+                                        Atualizar
+                                    </button>
+                                </header>
+                                <div id="cardio-monitoring" class="cardio-monitoring"></div>
+                            </section>
+                            <section class="cardio-card">
+                                <header>
+                                    <h3><i class="fas fa-lightbulb"></i> Insights Assistidos</h3>
+                                </header>
+                                <div class="cardio-insights">
+                                    <p id="cardio-insights-summary" class="cardio-insights-text">Execute a triagem ou carregue dados de monitoramento para gerar recomendações.</p>
+                                    <button id="cardio-insights-btn" class="btn-primary cardio-insights-btn">
+                                        <i class="fas fa-robot"></i>
+                                        Gerar Insights
+                                    </button>
+                                </div>
+                            </section>
                         </div>
                     </div>
                 </main>
